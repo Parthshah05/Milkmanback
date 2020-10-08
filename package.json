@@ -1,0 +1,33 @@
+{
+  "name": "milkback",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --exec babel-node app.js"
+  },
+  "author": "parth",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server": "^2.18.1",
+    "apollo-server-express": "^2.18.1",
+    "async": "^3.2.0",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-graphql": "^0.11.0",
+    "graphql": "^15.3.0",
+    "lodash": "^4.17.20",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.4",
+    "pg": "^8.4.0",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^6.3.5",
+    "validator": "^13.1.17"
+  },
+  "devDependencies": {
+    "babel-preset-env": "^1.7.0"
+  }
+}
