@@ -10,10 +10,15 @@ module.exports = gql`
     getProduct(id:Int):[Product],
     getBundle(id:Int):[Bundle],
     getUser(id:Int):[User],
+    getBundle_Product(id:Int):[Bundle_Product],
 
   }
 
   type Mutation {
+      userLogin (
+          email:String,
+          password:String
+      ):User,
     addUser (
         name:String,
         email:String,
@@ -37,6 +42,11 @@ module.exports = gql`
         name: String
     ): Bundle,
 
+    addBundle_Product (
+        product_id:Int,
+        bundle_id:Int
+    ): Bundle_Product,
+
     deleteUser(
         id: Int
     ): User,
@@ -52,6 +62,10 @@ module.exports = gql`
     deleteBundle(
         id: Int
     ): Bundle,
+
+    deleteBundle_Product(
+        id:Int
+    ): Bundle_Product,
 
     updateProduct(
         name:String,
@@ -83,12 +97,19 @@ module.exports = gql`
 
     ): Role,
 
+    updateBundle_Product (
+        product_id:Int,
+        bundle_id:Int,
+        id:Int
+    ): Bundle_Product,
+
 
     
   }
 
-  type User { id: Int, name: String, email:String , password:String , role_id:Int ,createdAt: TimeStamp, updatedAt: TimeStamp }
+  type User { id: Int, name: String, email:String , password:String , role_id:Int ,role:Role,createdAt: TimeStamp, updatedAt: TimeStamp }
   type Role { id: Int, name: String, createdAt: TimeStamp, updatedAt: TimeStamp }
   type Product { id:Int, name: String, description:String, image:String, price:Int, createdAt: TimeStamp, updatedAt: TimeStamp}
   type Bundle { id: Int, name: String, createdAt: TimeStamp, updatedAt: TimeStamp }
+  type Bundle_Product { id:Int, product_id:Int, bundle_id:Int,product:Product,bundle:Bundle createdAt: TimeStamp, updatedAt: TimeStamp }
 `;

@@ -74,10 +74,63 @@ module.exports = {
             } catch (error) {
                 console.log("Error");
             }
-        }
+        },
+
+        getBundle_Product: async (parent, args, context) => {
+            try {
+                let where = {}
+                if (args.id !== undefined && args.id !== '') {
+                    where = {id: args.id}
+                }
+
+                const bundle = await models.tbl_bundle_product.findAll({
+                    include: [
+                        {
+                            model: models.product_master, as: "product"
+                        },
+                        {
+                            model: models.bundle_master, as: "bundle",
+                        }
+                    ],
+                    where: where
+                });
+                return bundle
+            } catch (error) {
+                console.log("Error");
+            }
+        },
+
 
     },
     Mutation : {
+
+        userLogin: async (parent, args, context) => {
+            try {
+                
+                let where = {}
+                if (args.email === undefined) {
+                    console.log("Name Required");
+                }
+
+                if (args.password === undefined) {
+                    console.log("Password Required");
+                }
+                const user = await models.user_master.findOne({ where: { email: args.email, password: args.password } })
+                if (!user) {
+                   console.log("No such user found");
+                 }
+                 else{
+                     console.log("Successfully Login");
+                 }
+                
+
+            return user;
+                    
+                
+            } catch (error) {
+                console.log("Error");
+            }
+        },
 
         addUser: async (parent, args, context) => {
             try {
@@ -199,6 +252,31 @@ module.exports = {
             }
         },
 
+        addBundle_Product: async (parent, args, context) => {
+            try {
+               
+                if (args.product_id === undefined) {
+                    console.log("id Required");
+                }
+                if (args.bundle_id === undefined) {
+                    console.log("id Required");
+                }
+
+
+                    let bundle_product = await models.tbl_bundle_product.create({
+                        product_id: args.product_id,
+                        bundle_id: args.bundle_id
+                        
+                    });
+
+                    return bundle_product;
+                
+            } catch (error) {
+                console.log("Error");
+            }
+        },
+
+
         deleteUser: async (parent, args, context) => {
             try {
                
@@ -299,6 +377,33 @@ module.exports = {
                 console.log("Error");
             }
         },
+
+        deleteBundle_Product: async (parent, args, context) => {
+            try {
+               
+                if (args.id === undefined) {
+                    console.log("Id Required");
+                }
+
+                let result = await models.tbl_bundle_product.findByPk(args.id)
+
+                if (!result) {
+                    console.log("Not Exist");
+                } else {
+
+                    let bundle_product = await models.tbl_bundle_product.destroy({
+                        where: {
+                            id: args.id
+                        }
+                    });
+
+                    return bundle_product;
+                }
+            } catch (error) {
+                console.log("Error");
+            }
+        },
+
         updateUser: async (parent, args, context) => {
             try {
                
@@ -420,6 +525,38 @@ module.exports = {
                     });
 
                     return bundle;
+                }
+            } catch (error) {
+                console.log("Error");
+            }
+        },
+        
+        updateBundle_Product: async (parent, args, context) => {
+            try {
+               
+                if (args.id === undefined) {
+                    console.log("Id Required");
+                }
+
+                let product_bundleData = await models.tbl_bundle_product.findByPk(args.id)
+
+                if (!product_bundleData) {
+                    console.log("Not Exist");
+                } else {
+
+                    let bundle_product = await models.tbl_bundle_product.update(
+                        {
+                            product_id : args.product_id || product_bundleData.product_id,
+                            bundle_id  : args.bundle_id  || product_bundleData.bundle_id
+                        },
+                        
+                        {
+                        where: {
+                            id: args.id
+                        }
+                    });
+
+                    return bundle_product;
                 }
             } catch (error) {
                 console.log("Error");

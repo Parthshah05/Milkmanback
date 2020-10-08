@@ -23,10 +23,12 @@ const Bundle_product = sequelize.define('tbl_bundle_product', {
     // associations can be defined here
     Bundle_product.belongsTo(models.product_master, {
       foreignKey: 'product_id',
+      as:'product',
     });
 
     Bundle_product.belongsTo(models.bundle_master, {
       foreignKey: 'bundle_id',
+      as:'bundle',
     });
   };
   return Bundle_product;
