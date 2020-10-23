@@ -38,9 +38,9 @@ module.exports = {
                 
             }
         },
-        getUser: async (parent, args, {models,user}) => {
+        getUser: async (parent, args, context) => {
             try {
-                if(user){
+                
 
                 
                 let where = {}
@@ -57,7 +57,7 @@ module.exports = {
                     where: where
                 });
                 return User
-            }
+            
             } catch (error) {
                 console.log("Error");
             }

@@ -2,30 +2,49 @@ const jsonwebtoken = require("jsonwebtoken");
 require("dotenv").config("/.env");
 
 exports.isAuthenticated = async (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  console.log("AUTH HEADER", authHeader);
-   if (!authHeader) {
-    // res.status(400).json({
-    //    message: "Please Enter Token!",
-    //  });
+    try
+    {
+     const requestQuery = req.body.query;
 
-   return next();
-   }
-  const token = authHeader.split(" ")[1];
-  console.log(token);
-  if (!token || token === "") {
-    res.status(400).json({
-      message: "You are not Authenticated...!",
-     });
-    return next();
-  }
-  try {
-    const user  = await jsonwebtoken.verify(token, process.env.SECRET);
-    req.user = user;
+        if(requestQuery !== undefined)
+        {
+            const excludeAPI = [
+                "userLogin",
+                "addUser",
+                
+            ];
 
-  } catch (error) {
-    return res.status(400).json({
-      message: error.message,
+            if (!excludeAPI.some(function (v) {
+                return requestQuery.indexOf(v) >= 0;
+            }))
+            {
+                const authHeader = req.headers.authorization || "";
+                console.log("AUTH HEADER", authHeader);
+                if (!authHeader) {
+                    res.status(401).json({
+                    message: "Please Login First!",
+                });
+
+                next();
+                }
+                const token = authHeader.split(" ")[1];
+                console.log(token);
+                if (!token || token === "") {
+                res.status(400).json({
+                    message: "You are not Authenticated...!",
+                });
+                next();
+                }
+  
+                const user  = await jsonwebtoken.verify(token, process.env.SECRET);
+                req.user = user;
+
+            } 
+        }
+    }
+    catch (error) {
+        return res.status(401).json({
+        message: error.message,
     });
   }
   next();
