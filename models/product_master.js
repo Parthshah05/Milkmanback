@@ -5,6 +5,10 @@ module.exports =  (sequelize, DataTypes) => {
       allowNull: {
         args: false,
         msg: 'Please enter your name'
+      },
+      unique: {
+        args: true,
+        msg: 'Product Already Exists'
       }
     },
     

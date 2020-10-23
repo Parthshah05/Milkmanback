@@ -6,7 +6,7 @@ module.exports = gql`
   scalar TimeStamp
 
   type Query {
-    getRole(id:Int): [Role],
+    getRole: [Role!]!,
     getProduct(id:Int):[Product],
     getBundle(id:Int):[Bundle],
     getUser(id:Int):[User],
@@ -16,9 +16,9 @@ module.exports = gql`
 
   type Mutation {
       userLogin (
-          email:String,
-          password:String
-      ):User,
+          email:String!,
+          password:String!
+      ):LoginResponse!,
     addUser (
         name:String,
         email:String,
@@ -112,4 +112,10 @@ module.exports = gql`
   type Product { id:Int, name: String, description:String, image:String, price:Int, createdAt: TimeStamp, updatedAt: TimeStamp}
   type Bundle { id: Int, name: String, createdAt: TimeStamp, updatedAt: TimeStamp }
   type Bundle_Product { id:Int, product_id:Int, bundle_id:Int,product:Product,bundle:Bundle createdAt: TimeStamp, updatedAt: TimeStamp }
+ type LoginResponse {
+    token: String,
+    email:String,
+    name:String
+    
+  }
 `;

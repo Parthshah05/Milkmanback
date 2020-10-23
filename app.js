@@ -4,7 +4,7 @@ const { Client } = require('pg');
 const graphqlHttp =require('express-graphql');
 //var cookieParser = require('cookie-parser');
 const logger = require('morgan');
-
+const models = require('./models');
 //const routes = require('./routes');
 //var path = require('path');
 
@@ -13,15 +13,16 @@ const { ApolloServer, gql } = require('apollo-server-express');
 const typeDefs = require('./schema/schema');
 
 const resolvers = require('./schema/resolvers');
-
+const  { isAuthenticated }  = require("./Middleware/auth");
 
 const app = express();
 
 const cors = require('cors');
 //const server = http.createServer(app);
 const bodyParser = require('body-parser');
+require("dotenv").config();
 
-app.use(cors());
+
 app.use(logger('dev'));
 
 app.use(bodyParser.json());
@@ -31,10 +32,13 @@ app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
+app.use(cors());
+app.use(isAuthenticated);
 
 const server = new ApolloServer({
     typeDefs: typeDefs,
     resolvers,
+    context: ({req}) => {return {models,secret:process.env.SECRET,user:req.user} },
     graphiql: true,
 });
 
