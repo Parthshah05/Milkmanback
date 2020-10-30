@@ -47,7 +47,10 @@ module.exports = (sequelize, DataTypes) => {
       //   key: 'id',
       //   as: 'role_id',
       // }
-    }
+    },
+    token:{
+      type: DataTypes.STRING,
+    },
   }, {freezeTableName: true});
   User.associate = (models) => {
     // associations can be defined here

@@ -1,14 +1,7 @@
-//const roless = require("../models/role_master");
-//const users = require("../models/user_master");
 const models=require("../models/index");
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 require("dotenv").config();
-
-//import { combineResolvers } from 'graphql-resolvers';
-//const { isAuthenticated } = require("../Middleware/auth");
-const UserInputError = require('apollo-server');
-//const { checkToken } = require("../Middleware/auth");
 var async = require("async");
 const validator = require('validator');
 const sequelize = require('sequelize');
@@ -16,23 +9,23 @@ const sequelize = require('sequelize');
 
 module.exports = {
     Query: {
-        getRole: async (parent, args, {models,user}) => {
+        getRole: async (parent, args, context) => {
             try {
-                if(user){
+                
                 let where = {}
                 if(args.id !== undefined && args.id !== ''){
                     where = {id: args.id}
                 }
 
-                   console.log(user);
+                 
                 const role = await models.role_master.findAll({where: where})
                 
                 return role;
             
          
             
-         //  return await models.role_msater.findAll();
-            } 
+        
+             
             } catch (error) {
                 console.log(error);
                 
@@ -143,8 +136,7 @@ module.exports = {
                 
                 if (!users) {
                     throw new Error('No such user found');
-                    //throw new UserInputError('No User Found');
-                  //console.log("No such user found");
+                   
                 }
                 const valid = await bcrypt.compare(args.password, users.password)
                 if(!valid){
@@ -153,9 +145,18 @@ module.exports = {
                 }
                 else{
                     console.log("Successful login");
-                    var token = jwt.sign({ userId: users.id}, process.env.SECRET ,{expiresIn:'1h'});
-                    console.log(token);
-                    return {token,email:users.email,name:users.name}
+                    const userToken = {
+                        token: users.token,
+                      };
+                    // var tokens = jwt.sign({ userId: users.id}, process.env.SECRET ,{expiresIn:'1h'});
+                    // console.log(token);
+
+                    // await models.user_master.update({
+                        
+                    //     token: tokens
+                    // }, {where: {id: users.id}})
+
+                    return { token:users.token,email:users.email,name:users.name,role:users.role_id}
                 }
                
                 } catch (error) {
@@ -193,16 +194,24 @@ module.exports = {
                 if(result) {
                     throw new Error("User Already Exist");
                 } else {
+                    
+                    var token = jwt.sign({ userId: args.id}, process.env.SECRET ,{expiresIn:'12h'});
+                   
 
                     let User = await models.user_master.create({
                         name: args.name,
                         email:args.email,
                         password,
-                        role_id:args.role_id
-                        
+                        role_id:args.role_id,
+                        token
                     });
 
+                   
+                   
+                
                     return User;
+
+                    //return User;
                 }
             } catch (error) {
                 throw new Error(error.message);

@@ -11,6 +11,9 @@ exports.isAuthenticated = async (req, res, next) => {
             const excludeAPI = [
                 "userLogin",
                 "addUser",
+                "getRole",
+                "addRole",
+                "deleteRole"
                 
             ];
 
